@@ -61,13 +61,7 @@ python -c "from app import app; app.run(debug=True, host='127.0.0.1', port=5002)
 - To **start over** with a fresh seed, stop the app, delete `library_demo.db`, and run the app again.
 - `library_demo.db` is listed in `.gitignore` and is not committed.
 
-## Sign-in (demo)
 
-Log in with **email** or **matching member name** (case-insensitive). Seeded accounts use the same demo password defined in `app.py` as `DEMO_PASSWORD` (default `demo123`). After pulling old clones, the app may **migrate** a legacy `alice@campus.edu` row to `sangeetha.mahendra@gwu.edu` on startup.
-
-Second demo user: **bob@campus.edu** (useful for trying **Pay Fine** with an existing unpaid fine).
-
-> For anything beyond a class demo, replace plain-text passwords with proper hashing and a real auth approach.
 
 ## Project layout
 
