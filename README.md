@@ -1,46 +1,89 @@
-## Library management system
+# Campus Library
 
-Welcome to the Library Management System GitHub repository! This web application is designed to simplify the management of books, members, and transactions within a local library. With a user-friendly interface and essential features, this tool aims to enhance the overall efficiency and organization of library operations.
+A small **Flask** web app for a student library project. Members log in, open a **dashboard**, and use **seven use cases**: browse the catalog, borrow and return copies, extend a loan, place a hold, pay fines, and view their account. Data is stored in **SQLite** (`library_demo.db` on first run).
 
-## Required Tools
+**Repository:** [github.com/Lalithasree-2599/Library_Management_System](https://github.com/Lalithasree-2599/Library_Management_System)
 
-- **Python:** The application is built using Python, a versatile programming language known for its simplicity and readability.
+## Tech stack
 
-- **Flask:** Flask is used to create the web application, providing a microframework for building web solutions.
+- Python 3
+- Flask 3.x
+- Flask-SQLAlchemy (SQLAlchemy ORM)
+- SQLite
+- Jinja2 HTML templates
 
-- **Flask-SQLAlchemy:** This extension simplifies database interactions and management within the Flask application.
+## Use cases and routes
 
-- **SQLite:** SQLite is the chosen database engine, offering lightweight and efficient data storage.
+| Use case        | Path |
+|-----------------|------|
+| Log in          | `/login` |
+| Dashboard       | `/dashboard` |
+| Browse Books    | `/browse-books` |
+| Request Borrow  | `/request-borrow` |
+| Return Item     | `/return-item` |
+| Extend Loan     | `/extend-loan` |
+| Place Hold      | `/place-hold` |
+| Pay Fine        | `/pay-fine` |
+| View Account    | `/view-account` |
 
-## Getting Started
+Domain models include **Member**, **Book**, **BookCopy**, **Loan**, **Reservation**, **Fine**, **Payment**, and **Librarian** (seeded for the schema; only members sign in).
 
-1. Clone this repository to your local machine using: `git clone https://github.com/AJAY2-R/Library-management-system.git`
+## Run locally
 
-2. Install the required packages using `pip install -r requirements.txt`.
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Lalithasree-2599/Library_Management_System.git
+   cd Library_Management_System
+   ```
 
-3. Set up the database using `flask db init`, `flask db migrate`, and `flask db upgrade`.
+2. Create a virtual environment (recommended), then install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4. Run the application using `flask run` and access it in your browser at `http://127.0.0.1:5000`.
+3. Start the app:
+   ```bash
+   python app.py
+   ```
 
-5. Explore the different features, including book management, member information, and transaction tracking.
+4. Open **http://127.0.0.1:5000** in your browser (or the port shown in the terminal if `5000` is already in use).
+
+On macOS, **port 5000** is sometimes taken by AirPlay Receiver; either turn that off in **System Settings → General → AirDrop & Handoff**, or run on another port, for example:
+
+```bash
+python -c "from app import app; app.run(debug=True, host='127.0.0.1', port=5002)"
+```
+
+## Database and sample data
+
+- Tables are created automatically when the app starts (`db.create_all()`).
+- If there are **no members** yet, the app seeds books, copies, two demo members, sample loans, a hold, and a sample fine.
+- To **start over** with a fresh seed, stop the app, delete `library_demo.db`, and run the app again.
+- `library_demo.db` is listed in `.gitignore` and is not committed.
+
+## Sign-in (demo)
+
+Log in with **email** or **matching member name** (case-insensitive). Seeded accounts use the same demo password defined in `app.py` as `DEMO_PASSWORD` (default `demo123`). After pulling old clones, the app may **migrate** a legacy `alice@campus.edu` row to `sangeetha.mahendra@gwu.edu` on startup.
+
+Second demo user: **bob@campus.edu** (useful for trying **Pay Fine** with an existing unpaid fine).
+
+> For anything beyond a class demo, replace plain-text passwords with proper hashing and a real auth approach.
+
+## Project layout
+
+```
+├── app.py              # Routes, seed data, account sync
+├── models.py           # SQLAlchemy models and helpers
+├── requirements.txt
+├── templates/          # Jinja HTML pages
+├── static/             # CSS, images, JS
+└── screenshots/        # Older UI screenshots (may not match current pages)
+```
 
 ## Screenshots
 
-Here are a few screenshots showcasing the interface and functionalities of the Library Management System:
+Images under `screenshots/` may reflect an **earlier** version of the app. The current UI is defined by the templates in `templates/`.
 
-![Home](/screenshots/Home.png)
-![Books](/screenshots/Books.jpeg)
-![Return Book](/screenshots/returnbook.jpeg)
-![Transactions](/screenshots/Transactions.jpeg)
+## Contributing
 
-## Contributions
-
-Contributions to this project are welcome! Feel free to fork the repository, make your improvements, and submit a pull request. If you encounter any issues or have ideas for enhancements, please open an issue in the repository.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-With the Library Management System, we aim to make library operations smoother and more organized. We hope this tool proves valuable to libraries and their patrons. If you have any questions or feedback, please don't hesitate to reach out!
+Issues and pull requests are welcome for improvements or bug fixes.
