@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}View Account{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>View Account</h1>
+  <p><strong>{{ member.name }}</strong></p>
+  <p class="muted">{{ member.email }}</p>
+
+  <p class="muted" style="margin-bottom:0.5rem;">Shortcuts:</p>
+  <div class="btn-row" style="margin-bottom:1.25rem;">
+    <a class="btn secondary" href="{{ url_for('Browse Books') }}">Browse Books</a>
+    <a class="btn secondary" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
+    <a class="btn secondary" href="{{ url_for('Return Item') }}">Return Item</a>
+    <a class="btn secondary" href="{{ url_for('Extend Loan') }}">Extend Loan</a>
+    <a class="btn secondary" href="{{ url_for('Place Hold') }}">Place Hold</a>
+    <a class="btn secondary" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
+    <a class="btn" href="{{ url_for('dashboard') }}">Dashboard</a>
+  </div>
+
+  <h2>Current loans</h2>
+  {% if not loan_rows %}
+  <p class="muted">No active loans.</p>
+  {% else %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Copy</th><th>Checked out</th><th>Due</th></tr>
+    </thead>
+    <tbody>
+      {% for row in loan_rows %}
+      <tr>
+        <td>{{ row.book.title }}</td>
+        <td>{{ row.copy.copy_code }}</td>
+        <td>{{ row.loan.checkout_date }}</td>
+        <td>{{ row.loan.due_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h2>Active holds</h2>
+  {% if not hold_rows %}
+  <p class="muted">No active holds.</p>
+  {% else %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Placed</th></tr>
+    </thead>
+    <tbody>
+      {% for row in hold_rows %}
+      <tr>
+        <td>{{ row.book.title }}</td>
+        <td>{{ row.res.placed_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <h2>Unpaid fines</h2>
+  {% if not open_fines %}
+  <p class="muted">None.</p>
+  {% else %}
+  <table>
+    <thead>
+      <tr><th>Reason</th><th>Amount</th></tr>
+    </thead>
+    <tbody>
+      {% for f in open_fines %}
+      <tr>
+        <td>{{ f.reason }}</td>
+        <td>${{ '%.2f'|format(f.amount) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a class="btn" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
+  {% endif %}
+</div>
+{% endblock %}

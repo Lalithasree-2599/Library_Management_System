@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Pay Fine{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Pay Fine</h1>
+  <p class="muted">Pay one unpaid fine at a time (demo: marks fine paid and records a payment).</p>
+  <div class="btn-row" style="margin-bottom:1rem;">
+    <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
+    <a class="btn secondary" href="{{ url_for('Return Item') }}">Return Item</a>
+  </div>
+  {% if not fines %}
+  <p>You have no unpaid fines.</p>
+  {% else %}
+  <table>
+    <thead>
+      <tr><th>Reason</th><th>Amount</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for f in fines %}
+      <tr>
+        <td>{{ f.reason }}</td>
+        <td>${{ '%.2f'|format(f.amount) }}</td>
+        <td>
+          <form method="post" action="{{ url_for('Pay Fine') }}" style="margin:0;">
+            <input type="hidden" name="fine_id" value="{{ f.id }}">
+            <button type="submit">Pay</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}

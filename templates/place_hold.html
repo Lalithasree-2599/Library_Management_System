@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Place Hold{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Place Hold</h1>
+  <p class="muted">Reserve your place in line for a title. Staff would normally notify you when a copy is ready.</p>
+  <div class="btn-row" style="margin-bottom:1rem;">
+    <a class="btn secondary" href="{{ url_for('Browse Books') }}">Browse Books</a>
+    <a class="btn secondary" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
+    <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
+  </div>
+  <form method="post" action="{{ url_for('Place Hold') }}">
+    <label for="book_id">Book</label>
+    <select id="book_id" name="book_id" required>
+      {% for b in books %}
+      <option value="{{ b.id }}" {% if preselect_book_id and preselect_book_id == b.id %}selected{% endif %}>{{ b.title }} — {{ b.author }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Place hold</button>
+  </form>
+</div>
+{% endblock %}

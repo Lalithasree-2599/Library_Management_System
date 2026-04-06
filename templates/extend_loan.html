@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Extend Loan{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Extend Loan</h1>
+  <p class="muted">Renew once per loan for {{ extend_days }} extra days if not overdue (max {{ max_renewals }} renewal).</p>
+  <div class="btn-row" style="margin-bottom:1rem;">
+    <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
+    <a class="btn secondary" href="{{ url_for('Return Item') }}">Return Item</a>
+  </div>
+  {% if not items %}
+  <p>No active loans.</p>
+  <p class="muted">Check out a book from <a href="{{ url_for('Request Borrow') }}">Request Borrow</a> first.</p>
+  {% else %}
+  <form method="post" action="{{ url_for('Extend Loan') }}">
+    <label for="loan_id">Loan to extend</label>
+    <select id="loan_id" name="loan_id" required>
+      {% for item in items %}
+      <option value="{{ item.loan.id }}">
+        {{ item.book.title }} — due {{ item.loan.due_date }} — renewals used: {{ item.loan.renewal_count }}/{{ max_renewals }}
+      </option>
+      {% endfor %}
+    </select>
+    <button type="submit">Extend due date</button>
+  </form>
+  <p class="muted" style="margin-top:1rem;">Success returns you to the <a href="{{ url_for('dashboard') }}">dashboard</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

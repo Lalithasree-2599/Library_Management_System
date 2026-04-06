@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Request Borrow{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Request Borrow</h1>
+  <p class="muted">Borrow one available copy of a title. Loan length: 14 days.</p>
+  <div class="btn-row" style="margin-bottom:1rem;">
+    <a class="btn secondary" href="{{ url_for('Browse Books') }}">Browse Books</a>
+    <a class="btn secondary" href="{{ url_for('Place Hold') }}">Place Hold</a>
+    <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
+  </div>
+  {% if not can_borrow %}
+  <p class="muted">Nothing is available to borrow right now.</p>
+  {% else %}
+  <form method="post" action="{{ url_for('Request Borrow') }}">
+    <label for="book_id">Book</label>
+    <select id="book_id" name="book_id" required>
+      {% for o in options %}
+      {% if o.available > 0 %}
+      <option value="{{ o.book.id }}" {% if preselect_book_id and preselect_book_id == o.book.id %}selected{% endif %}>
+        {{ o.book.title }} — {{ o.book.author }} ({{ o.available }} available)
+      </option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <button type="submit">Borrow selected book</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

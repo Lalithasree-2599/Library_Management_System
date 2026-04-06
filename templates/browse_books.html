@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Browse Books{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Browse Books</h1>
+  <p class="muted">Search the catalog. Use <strong>Borrow</strong> when a copy is free, or <strong>Hold</strong> to queue any title.</p>
+  <div class="btn-row" style="margin-bottom:1rem;">
+    <a class="btn secondary" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
+    <a class="btn secondary" href="{{ url_for('Place Hold') }}">Place Hold</a>
+    <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
+  </div>
+  <form method="get" action="{{ url_for('Browse Books') }}">
+    <label for="title">Title contains</label>
+    <input id="title" name="title" type="text" value="{{ q_title }}">
+    <label for="author">Author contains</label>
+    <input id="author" name="author" type="text" value="{{ q_author }}">
+    <button type="submit">Search</button>
+  </form>
+
+  <h2>Results</h2>
+  {% if not rows %}
+  <p class="muted">No books match.</p>
+  {% else %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Author</th><th>ISBN</th><th>Available</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.book.title }}</td>
+        <td>{{ row.book.author }}</td>
+        <td>{{ row.book.isbn or '—' }}</td>
+        <td>{{ row.available }} / {{ row.total }}</td>
+        <td class="btn-row" style="margin:0;">
+          {% if row.available > 0 %}
+          <a class="btn" href="{{ url_for('Request Borrow', book_id=row.book.id) }}">Request Borrow</a>
+          {% else %}
+          <span class="muted" style="font-size:0.8rem;">No copy free</span>
+          {% endif %}
+          <a class="btn secondary" href="{{ url_for('Place Hold', book_id=row.book.id) }}">Place Hold</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <p class="muted" style="margin-top:1rem;">Tip: after borrowing or placing a hold, the app sends you back to the <a href="{{ url_for('dashboard') }}">dashboard</a> to continue the demo.</p>
+</div>
+{% endblock %}
