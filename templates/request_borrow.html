@@ -2,18 +2,18 @@
 {% block title %}Request Borrow{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>Request Borrow</h1>
-  <p class="muted">Borrow one available copy of a title. Loan length: 14 days.</p>
+  <h1 class="page-title">Request Borrow</h1>
+  <p class="page-lead">Check out one available copy. Standard loan length: <strong>14 days</strong>.</p>
   <div class="btn-row" style="margin-bottom:1rem;">
     <a class="btn secondary" href="{{ url_for('Browse Books') }}">Browse Books</a>
     <a class="btn secondary" href="{{ url_for('Place Hold') }}">Place Hold</a>
     <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
   </div>
   {% if not can_borrow %}
-  <p class="muted">Nothing is available to borrow right now.</p>
+  <div class="empty-state">Nothing is available to borrow right now. Try <a href="{{ url_for('Place Hold') }}">Place Hold</a> or check <a href="{{ url_for('Browse Books') }}">Browse Books</a> later.</div>
   {% else %}
   <form method="post" action="{{ url_for('Request Borrow') }}">
-    <label for="book_id">Book</label>
+    <label for="book_id">Choose a book</label>
     <select id="book_id" name="book_id" required>
       {% for o in options %}
       {% if o.available > 0 %}
@@ -23,7 +23,7 @@
       {% endif %}
       {% endfor %}
     </select>
-    <button type="submit">Borrow selected book</button>
+    <button type="submit">Confirm borrow</button>
   </form>
   {% endif %}
 </div>

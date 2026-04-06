@@ -2,36 +2,50 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>Dashboard</h1>
-  <p class="muted">Hello, <strong>{{ member.name }}</strong>. Use the cards below to run each use case in order for a full demo, or jump anywhere.</p>
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-lead">Hello, <strong>{{ member.name }}</strong>. Jump to any use case below—each card links to that workflow.</p>
 
-  <div class="stat-row">
-    <div><strong>{{ active_loans }}</strong><br><span class="muted">active loans</span></div>
-    <div><strong>{{ holds }}</strong><br><span class="muted">active holds</span></div>
-    <div><strong>${{ '%.2f'|format(unpaid_total) }}</strong><br><span class="muted">unpaid fines</span></div>
-    <div><strong>{{ titles_with_available_copy }}</strong> / {{ total_titles }}<br><span class="muted">titles w/ copy free</span></div>
+  <div class="stat-grid" role="group" aria-label="Account summary">
+    <div class="stat-card">
+      <span class="stat-card__value">{{ active_loans }}</span>
+      <span class="stat-card__label">Active loans</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">{{ holds }}</span>
+      <span class="stat-card__label">Active holds</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">${{ '%.2f'|format(unpaid_total) }}</span>
+      <span class="stat-card__label">Unpaid fines</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card__value">{{ titles_with_available_copy }}/{{ total_titles }}</span>
+      <span class="stat-card__label">Titles w/ copy</span>
+    </div>
   </div>
 
   {% if overdue_loans %}
-  <p class="flash error" style="margin-top:0;">You have <strong>{{ overdue_loans }}</strong> overdue loan(s). Use <strong>Return Item</strong> or <strong>Pay Fine</strong> after return.</p>
+  <div class="alert-banner" role="alert">
+    You have <strong>{{ overdue_loans }}</strong> overdue loan(s). Use <strong>Return Item</strong>, then <strong>Pay Fine</strong> if needed.
+  </div>
   {% endif %}
 
   <h2>All 7 use cases</h2>
   <div class="uc-grid">
     <div class="uc-card">
-      <h3><span class="uc-num">1</span> Browse Books</h3>
+      <h3><span class="uc-num">1</span>Browse Books</h3>
       <p class="muted" style="margin:0 0 0.5rem;">Search and list the catalog; see how many copies are free.</p>
       <p class="muted" style="margin:0 0 0.5rem;"><strong>{{ total_titles }}</strong> titles · <strong>{{ titles_with_available_copy }}</strong> with at least one copy available</p>
       <a class="btn" href="{{ url_for('Browse Books') }}">Browse Books</a>
     </div>
 
     <div class="uc-card">
-      <h3><span class="uc-num">2</span> Request Borrow</h3>
+      <h3><span class="uc-num">2</span>Request Borrow</h3>
       <p class="muted" style="margin:0 0 0.5rem;">Check out an available copy (linked from Browse Books when a copy exists).</p>
       {% if can_borrow_now %}
-      <p class="muted" style="margin:0 0 0.5rem;">Status: <strong style="color:#166534;">You can borrow now</strong></p>
+      <p class="muted" style="margin:0 0 0.5rem;">Status: <strong style="color:var(--success);">You can borrow now</strong></p>
       {% else %}
-      <p class="muted" style="margin:0 0 0.5rem;">Status: nothing free — try <a href="{{ url_for('Place Hold') }}">Place Hold</a></p>
+      <p class="muted" style="margin:0 0 0.5rem;">Nothing free — try <a href="{{ url_for('Place Hold') }}">Place Hold</a></p>
       {% endif %}
       <div class="btn-row">
         <a class="btn" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
@@ -40,22 +54,22 @@
     </div>
 
     <div class="uc-card">
-      <h3><span class="uc-num">3</span> Return Item</h3>
-      <p class="muted" style="margin:0 0 0.5rem;">Return a copy; late returns create a fine.</p>
+      <h3><span class="uc-num">3</span>Return Item</h3>
+      <p class="muted" style="margin:0 0 0.5rem;">Return a copy; late returns may create a fine.</p>
       <p class="muted" style="margin:0 0 0.5rem;">You have <strong>{{ active_loans }}</strong> item(s) out{% if overdue_loans %} (<strong>{{ overdue_loans }}</strong> overdue){% endif %}</p>
-      <a class="btn" href="{{ url_for('Return Item') }}" {% if active_loans == 0 %}style="opacity:0.6;"{% endif %}>Return Item</a>
+      <a class="btn {{ 'is-muted' if active_loans == 0 else '' }}" href="{{ url_for('Return Item') }}">Return Item</a>
     </div>
 
     <div class="uc-card">
-      <h3><span class="uc-num">4</span> Extend Loan</h3>
+      <h3><span class="uc-num">4</span>Extend Loan</h3>
       <p class="muted" style="margin:0 0 0.5rem;">One renewal per loan if not yet overdue (+7 days).</p>
       <p class="muted" style="margin:0 0 0.5rem;"><strong>{{ extendable_loans }}</strong> loan(s) can still be renewed</p>
-      <a class="btn" href="{{ url_for('Extend Loan') }}" {% if extendable_loans == 0 %}style="opacity:0.6;"{% endif %}>Extend Loan</a>
+      <a class="btn {{ 'is-muted' if extendable_loans == 0 else '' }}" href="{{ url_for('Extend Loan') }}">Extend Loan</a>
     </div>
 
     <div class="uc-card">
-      <h3><span class="uc-num">5</span> Place Hold</h3>
-      <p class="muted" style="margin:0 0 0.5rem;">Reserve a title; shows on your account.</p>
+      <h3><span class="uc-num">5</span>Place Hold</h3>
+      <p class="muted" style="margin:0 0 0.5rem;">Reserve a title; it appears on View Account.</p>
       <p class="muted" style="margin:0 0 0.5rem;">You have <strong>{{ holds }}</strong> active hold(s)</p>
       <div class="btn-row">
         <a class="btn" href="{{ url_for('Place Hold') }}">Place Hold</a>
@@ -64,18 +78,18 @@
     </div>
 
     <div class="uc-card">
-      <h3><span class="uc-num">6</span> Pay Fine</h3>
+      <h3><span class="uc-num">6</span>Pay Fine</h3>
       <p class="muted" style="margin:0 0 0.5rem;">Pay unpaid fines one at a time.</p>
       <p class="muted" style="margin:0 0 0.5rem;"><strong>{{ unpaid_fine_count }}</strong> unpaid · total <strong>${{ '%.2f'|format(unpaid_total) }}</strong></p>
-      <a class="btn" href="{{ url_for('Pay Fine') }}" {% if unpaid_fine_count == 0 %}style="opacity:0.6;"{% endif %}>Pay Fine</a>
+      <a class="btn {{ 'is-muted' if unpaid_fine_count == 0 else '' }}" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
     </div>
 
-    <div class="uc-card" style="grid-column: 1 / -1;">
-      <h3><span class="uc-num">7</span> View Account</h3>
-      <p class="muted" style="margin:0 0 0.5rem;">See loans, holds, and fines in one place — then return to the Dashboard to continue the demo.</p>
+    <div class="uc-card uc-card--full">
+      <h3><span class="uc-num">7</span>View Account</h3>
+      <p class="muted" style="margin:0 0 0.5rem;">See loans, holds, and fines in one place.</p>
       <div class="btn-row">
         <a class="btn" href="{{ url_for('View Account') }}">View Account</a>
-        <a class="btn secondary" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="btn secondary" href="{{ url_for('dashboard') }}">Refresh</a>
       </div>
     </div>
   </div>

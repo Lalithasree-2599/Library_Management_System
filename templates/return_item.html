@@ -2,19 +2,21 @@
 {% block title %}Return Item{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>Return Item</h1>
-  <p class="muted">Return a copy you have checked out. Late returns may add a small fine.</p>
+  <h1 class="page-title">Return Item</h1>
+  <p class="page-lead">Return a checked-out copy. Late returns may add a fine to your account.</p>
   <div class="btn-row" style="margin-bottom:1rem;">
     <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
     <a class="btn secondary" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
     <a class="btn secondary" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
   </div>
   {% if not items %}
-  <p>You have no items to return.</p>
-  <p class="muted">Use <a href="{{ url_for('Request Borrow') }}">Request Borrow</a> or <a href="{{ url_for('Browse Books') }}">Browse Books</a>, then come back here.</p>
+  <div class="empty-state">
+    <p style="margin:0 0 0.5rem;">You have no items to return.</p>
+    <p class="muted" style="margin:0;">Use <a href="{{ url_for('Request Borrow') }}">Request Borrow</a> or <a href="{{ url_for('Browse Books') }}">Browse Books</a> first.</p>
+  </div>
   {% else %}
   <form method="post" action="{{ url_for('Return Item') }}">
-    <label for="loan_id">Choose loan</label>
+    <label for="loan_id">Item to return</label>
     <select id="loan_id" name="loan_id" required>
       {% for item in items %}
       <option value="{{ item.loan.id }}">
@@ -22,9 +24,9 @@
       </option>
       {% endfor %}
     </select>
-    <button type="submit">Return selected item</button>
+    <button type="submit">Confirm return</button>
   </form>
-  <p class="muted" style="margin-top:1rem;">After return you return to the <a href="{{ url_for('dashboard') }}">dashboard</a> to continue.</p>
+  <p class="muted" style="margin-top:1rem;">You’ll be sent to the <a href="{{ url_for('dashboard') }}">Dashboard</a> after returning.</p>
   {% endif %}
 </div>
 {% endblock %}

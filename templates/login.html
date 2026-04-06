@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Log in — Campus Library{% endblock %}
+{% block main_class %}site-main--auth{% endblock %}
 {% block content %}
-<div class="card">
-  <h1>Member log in</h1>
-  <p class="muted">After login you land on the <strong>member dashboard</strong> with all 7 use cases connected.</p>
-  <form method="post" action="{{ url_for('login') }}">
+<div class="card card--auth">
+  <h1 class="page-title">Member log in</h1>
+  <p class="page-lead">Sign in to open your <strong>dashboard</strong> and use all library features.</p>
+  <form method="post" action="{{ url_for('login') }}" autocomplete="on">
     <label for="email">Email or name</label>
-    <input id="email" name="email" type="text" required autocomplete="username" placeholder="sangeetha.mahendra@gwu.edu or Sangeetha">
+    <input id="email" name="email" type="text" required autocomplete="username" placeholder="Email or name">
     <label for="password">Password</label>
-    <input id="password" name="password" type="password" required autocomplete="current-password">
+    <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••">
     <button type="submit">Log in</button>
   </form>
 </div>

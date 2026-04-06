@@ -2,34 +2,36 @@
 {% block title %}Pay Fine{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>Pay Fine</h1>
-  <p class="muted">Pay one unpaid fine at a time (demo: marks fine paid and records a payment).</p>
+  <h1 class="page-title">Pay Fine</h1>
+  <p class="page-lead">Pay <strong>one</strong> unpaid fine at a time. The fine is marked paid and a payment record is stored.</p>
   <div class="btn-row" style="margin-bottom:1rem;">
     <a class="btn secondary" href="{{ url_for('View Account') }}">View Account</a>
     <a class="btn secondary" href="{{ url_for('Return Item') }}">Return Item</a>
   </div>
   {% if not fines %}
-  <p>You have no unpaid fines.</p>
+  <div class="empty-state">You have no unpaid fines.</div>
   {% else %}
-  <table>
-    <thead>
-      <tr><th>Reason</th><th>Amount</th><th></th></tr>
-    </thead>
-    <tbody>
-      {% for f in fines %}
-      <tr>
-        <td>{{ f.reason }}</td>
-        <td>${{ '%.2f'|format(f.amount) }}</td>
-        <td>
-          <form method="post" action="{{ url_for('Pay Fine') }}" style="margin:0;">
-            <input type="hidden" name="fine_id" value="{{ f.id }}">
-            <button type="submit">Pay</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Reason</th><th>Amount</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for f in fines %}
+        <tr>
+          <td>{{ f.reason }}</td>
+          <td><strong>${{ '%.2f'|format(f.amount) }}</strong></td>
+          <td class="table-actions">
+            <form method="post" action="{{ url_for('Pay Fine') }}" style="margin:0;">
+              <input type="hidden" name="fine_id" value="{{ f.id }}">
+              <button type="submit" class="btn btn-sm">Pay now</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 </div>
 {% endblock %}

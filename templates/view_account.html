@@ -2,79 +2,87 @@
 {% block title %}View Account{% endblock %}
 {% block content %}
 <div class="card">
-  <h1>View Account</h1>
-  <p><strong>{{ member.name }}</strong></p>
-  <p class="muted">{{ member.email }}</p>
+  <h1 class="page-title">View Account</h1>
+  <p class="page-lead" style="margin-bottom:0.25rem;"><strong>{{ member.name }}</strong></p>
+  <p class="muted" style="margin-top:0;">{{ member.email }}</p>
 
-  <p class="muted" style="margin-bottom:0.5rem;">Shortcuts:</p>
-  <div class="btn-row" style="margin-bottom:1.25rem;">
-    <a class="btn secondary" href="{{ url_for('Browse Books') }}">Browse Books</a>
-    <a class="btn secondary" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
-    <a class="btn secondary" href="{{ url_for('Return Item') }}">Return Item</a>
-    <a class="btn secondary" href="{{ url_for('Extend Loan') }}">Extend Loan</a>
-    <a class="btn secondary" href="{{ url_for('Place Hold') }}">Place Hold</a>
-    <a class="btn secondary" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
-    <a class="btn" href="{{ url_for('dashboard') }}">Dashboard</a>
+  <p class="muted" style="margin:1rem 0 0.5rem;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;">Shortcuts</p>
+  <div class="shortcut-bar">
+    <a class="btn secondary btn-sm" href="{{ url_for('Browse Books') }}">Browse Books</a>
+    <a class="btn secondary btn-sm" href="{{ url_for('Request Borrow') }}">Request Borrow</a>
+    <a class="btn secondary btn-sm" href="{{ url_for('Return Item') }}">Return Item</a>
+    <a class="btn secondary btn-sm" href="{{ url_for('Extend Loan') }}">Extend Loan</a>
+    <a class="btn secondary btn-sm" href="{{ url_for('Place Hold') }}">Place Hold</a>
+    <a class="btn secondary btn-sm" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
+    <a class="btn btn-sm" href="{{ url_for('dashboard') }}">Dashboard</a>
   </div>
 
   <h2>Current loans</h2>
   {% if not loan_rows %}
-  <p class="muted">No active loans.</p>
+  <div class="empty-state">No active loans.</div>
   {% else %}
-  <table>
-    <thead>
-      <tr><th>Title</th><th>Copy</th><th>Checked out</th><th>Due</th></tr>
-    </thead>
-    <tbody>
-      {% for row in loan_rows %}
-      <tr>
-        <td>{{ row.book.title }}</td>
-        <td>{{ row.copy.copy_code }}</td>
-        <td>{{ row.loan.checkout_date }}</td>
-        <td>{{ row.loan.due_date }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Copy</th><th>Checked out</th><th>Due</th></tr>
+      </thead>
+      <tbody>
+        {% for row in loan_rows %}
+        <tr>
+          <td><strong>{{ row.book.title }}</strong></td>
+          <td>{{ row.copy.copy_code }}</td>
+          <td>{{ row.loan.checkout_date }}</td>
+          <td>{{ row.loan.due_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 
   <h2>Active holds</h2>
   {% if not hold_rows %}
-  <p class="muted">No active holds.</p>
+  <div class="empty-state">No active holds.</div>
   {% else %}
-  <table>
-    <thead>
-      <tr><th>Title</th><th>Placed</th></tr>
-    </thead>
-    <tbody>
-      {% for row in hold_rows %}
-      <tr>
-        <td>{{ row.book.title }}</td>
-        <td>{{ row.res.placed_at }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Placed</th></tr>
+      </thead>
+      <tbody>
+        {% for row in hold_rows %}
+        <tr>
+          <td><strong>{{ row.book.title }}</strong></td>
+          <td>{{ row.res.placed_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 
   <h2>Unpaid fines</h2>
   {% if not open_fines %}
-  <p class="muted">None.</p>
+  <div class="empty-state">None.</div>
   {% else %}
-  <table>
-    <thead>
-      <tr><th>Reason</th><th>Amount</th></tr>
-    </thead>
-    <tbody>
-      {% for f in open_fines %}
-      <tr>
-        <td>{{ f.reason }}</td>
-        <td>${{ '%.2f'|format(f.amount) }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <a class="btn" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Reason</th><th>Amount</th></tr>
+      </thead>
+      <tbody>
+        {% for f in open_fines %}
+        <tr>
+          <td>{{ f.reason }}</td>
+          <td><strong>${{ '%.2f'|format(f.amount) }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-row">
+    <a class="btn" href="{{ url_for('Pay Fine') }}">Pay Fine</a>
+  </div>
   {% endif %}
 </div>
 {% endblock %}
